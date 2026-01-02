@@ -13,14 +13,19 @@ A managed `CLAUDE.md` file containing personal preferences for working with AI a
 - **Simplicity principle** - Minimal changes, avoid over-engineering
 - **Communication style** - Structured question format for complex decisions
 - **Safety guardrails** - Never delete files or run destructive commands without confirmation
+- **No attribution** - Disables commit/PR attribution messages
 
 ## Install
+
+Requires `jq` for settings configuration: `brew install jq`
 
 ```bash
 ./install.sh
 ```
 
-This creates a symlink from `~/.claude/CLAUDE.md` to this repo's `CLAUDE.md`.
+This:
+- Creates a symlink from `~/.claude/CLAUDE.md` to this repo's `CLAUDE.md`
+- Merges `settings.json` into `~/.claude/settings.json` (repo settings take precedence)
 
 ## Customization
 
