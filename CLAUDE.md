@@ -4,6 +4,11 @@
 
 **The user is in control at every step.** AI proposes and assists, the user leads and confirms.
 
+## Language Preferences
+
+- Prefer Python for simple scripts when bash won't do
+- Use libraries where possible
+
 ## Behavioral Expectations
 
 **AI must:**
