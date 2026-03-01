@@ -1,12 +1,12 @@
 ---
 name: generate-install-app
-description: This skill should be used when the user wants to create an install script for a repo, install a CLI tool, make a script globally available, make a command available on PATH, add to PATH, or create a symlink wrapper for an executable. Generates install.sh that symlinks the repo's main executable into ~/.local/bin/.
+description: This skill should be used when the user wants to create an install script for a repo, install a CLI tool, make a script globally available, make a command available on PATH, add to PATH, create a symlink wrapper for an executable, or update an existing install script. Generates install.sh that symlinks the repo's main executable into ~/.local/bin/ and any zsh completion files into ~/.local/share/zsh/site-functions/.
 allowed-tools: Bash(*), AskUserQuestion, Read, Edit, Write, Glob, Grep
 ---
 
 # Create App Install Script
 
-Create an install script that symlinks a repo's main executable to `~/.local/bin/` so it's available on the user's PATH.
+Create or update an install script that symlinks a repo's main executable to `~/.local/bin/` so it's available on the user's PATH, and any zsh completion files to `~/.local/share/zsh/site-functions/`.
 
 ## Steps
 
@@ -17,9 +17,10 @@ Create an install script that symlinks a repo's main executable to `~/.local/bin
 
 2. **Check for existing install scripts**:
    - Look for `install.sh` in the repo root.
-   - If one exists, read it and check whether it already symlinks to `~/.local/bin/`.
-     - If it already handles this: inform the user, no action needed.
-     - If it does something else: name the new script `install-bin.sh` instead.
+   - If one exists, read it and determine the appropriate action:
+     - If it already handles bin symlink and completions: inform the user, no action needed.
+     - If it handles bin symlink but not completions: update it to add completions support.
+     - If it does something unrelated: name the new script `install-bin.sh` instead.
    - If no `install.sh` exists, create `install.sh`.
 
 3. **Generate the install script** with this structure:
@@ -29,6 +30,7 @@ Create an install script that symlinks a repo's main executable to `~/.local/bin
 
    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
    BIN_DIR="$HOME/.local/bin"
+   COMPLETIONS_DIR="$HOME/.local/share/zsh/site-functions"
    COMMAND_NAME="<command-name>"
    TARGET="$SCRIPT_DIR/<path-to-executable>"
 
@@ -43,23 +45,35 @@ Create an install script that symlinks a repo's main executable to `~/.local/bin
    # Make executable
    chmod +x "$TARGET"
 
-   # Handle existing symlink or file
-   LINK="$BIN_DIR/$COMMAND_NAME"
-   if [ -L "$LINK" ]; then
-       CURRENT="$(readlink "$LINK")"
-       if [ "$CURRENT" = "$TARGET" ]; then
-           echo "$COMMAND_NAME already installed."
-           exit 0
+   # Symlink helper: creates or updates a symlink
+   link_file() {
+       local target="$1" link="$2" label="$3"
+       if [ -L "$link" ]; then
+           local current
+           current="$(readlink "$link")"
+           if [ "$current" = "$target" ]; then
+               echo "$label already installed."
+               return 0
+           fi
+           echo "Updating existing symlink for $label..."
+           rm "$link"
+       elif [ -e "$link" ]; then
+           echo "Warning: $link exists and is not a symlink. Skipping $label."
+           return 1
        fi
-       echo "Updating existing symlink..."
-       rm "$LINK"
-   elif [ -e "$LINK" ]; then
-       echo "Warning: $LINK exists and is not a symlink. Skipping."
-       exit 1
-   fi
+       ln -s "$target" "$link"
+       echo "Installed: $label -> $target"
+   }
 
-   ln -s "$TARGET" "$LINK"
-   echo "Installed: $COMMAND_NAME -> $TARGET"
+   # Install executable
+   link_file "$TARGET" "$BIN_DIR/$COMMAND_NAME" "$COMMAND_NAME"
+
+   # Install zsh completions if present
+   COMPLETION_FILE="$SCRIPT_DIR/_$COMMAND_NAME"
+   if [ -f "$COMPLETION_FILE" ]; then
+       mkdir -p "$COMPLETIONS_DIR"
+       link_file "$COMPLETION_FILE" "$COMPLETIONS_DIR/_$COMMAND_NAME" "_$COMMAND_NAME (zsh completion)"
+   fi
    ```
 
 4. **Adapt for the language/runtime** if needed:
@@ -73,9 +87,20 @@ Create an install script that symlinks a repo's main executable to `~/.local/bin
    chmod +x install.sh  # or install-bin.sh
    ```
 
-6. **Report** what was created and how to use it:
+6. **Look for zsh completion files**:
+   - Search the repo for files named `_<command-name>` (the underscore-prefixed completion file).
+   - Common locations: repo root, `completions/`, `zsh/`, `contrib/`.
+   - If found, the generated script will symlink it to `~/.local/share/zsh/site-functions/`.
+   - If not found, skip completions silently (no error).
+
+7. **Report** what was created and how to use it:
    ```
    Created: install.sh
    Run: ./install.sh
    Command will be available as: <command-name>
    ```
+   - If completions were included, note that `~/.local/share/zsh/site-functions` must be on `$fpath`. Suggest adding this to `.zshrc` if needed:
+     ```bash
+     fpath=(~/.local/share/zsh/site-functions $fpath)
+     autoload -Uz compinit && compinit
+     ```
