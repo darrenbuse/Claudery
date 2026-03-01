@@ -1,0 +1,13 @@
+{
+  "name": "claudery-marketplace",
+  "owner": {
+    "name": "Darren Buse"
+  },
+  "plugins": [
+    {
+      "name": "claudery",
+      "source": "./",
+      "description": "Personal Claude Code plugins and preferences"
+    }
+  ]
+}

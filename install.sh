@@ -95,5 +95,17 @@ else
     echo "No settings.json in repo, skipping settings configuration"
 fi
 
+# Install plugin
 echo ""
-echo "Done! Your personal AI preferences are now active for Claude Code."
+"$SCRIPT_DIR/install-plugin.sh"
+
+echo ""
+echo "Done! Your personal AI preferences and plugins are now active for Claude Code."
+echo ""
+echo "Available skills:"
+for skill_file in "$SCRIPT_DIR"/skills/*/SKILL.md; do
+    [ -f "$skill_file" ] || continue
+    skill_name="$(basename "$(dirname "$skill_file")")"
+    skill_desc="$(sed -n 's/^description: *//p' "$skill_file" | head -1)"
+    printf "  /%-28s %s\n" "$skill_name" "- ${skill_desc%%.*}."
+done
