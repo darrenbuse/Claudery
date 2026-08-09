@@ -1,17 +1,17 @@
 # Claudery
 
-Personal AI collaboration preferences and plugins for Claude Code.
+Personal AI collaboration preferences and skills for Claude Code and GitHub Copilot CLI.
 
 ## What is this?
 
-A managed `CLAUDE.md` file containing personal preferences for working with AI assistants, plus custom skills/plugins. Symlinked to `~/.claude/CLAUDE.md`, these preferences apply across all your projects.
+A managed instructions file containing personal preferences for working with AI assistants, plus custom skills. Symlinked to `~/.claude/CLAUDE.md` and `~/.copilot/AGENTS.md`, these preferences apply across all your projects in both agents. Skills are symlinked into each agent's global skills directory.
 
 ## What's included
 
 - **Behavioral expectations** - AI proposes before implementing, waits for confirmation
 - **Critical collaboration** - Push back on ideas, challenge assumptions, offer alternatives
 - **Simplicity principle** - Minimal changes, avoid over-engineering
-- **Communication style** - Structured question format for complex decisions
+- **Communication style** - Lead with the answer, no filler or throat-clearing, bullets-to-sentences drafting; structured question format for complex decisions
 - **Safety guardrails** - Never delete files or run destructive commands without confirmation
 - **No attribution** - Disables commit/PR attribution messages
 
@@ -24,8 +24,9 @@ Requires `jq` for settings configuration: `brew install jq`
 ```
 
 This:
-- Creates a symlink from `~/.claude/CLAUDE.md` to this repo's `CLAUDE.md`
+- Creates symlinks from `~/.claude/CLAUDE.md` and `~/.copilot/AGENTS.md` to this repo's `CLAUDE.md`
 - Merges `settings.json` into `~/.claude/settings.json` (repo settings take precedence)
+- Symlinks every skill in `skills/` into `~/.claude/skills/` and `~/.copilot/skills/`
 
 ## Customization
 
@@ -37,9 +38,17 @@ These are global defaults. Add a `CLAUDE.md` to any project root to override or 
 
 ## Skills
 
-Skills are installed as a Claude Code plugin registered as a local marketplace. The `install-plugin.sh` script registers the plugin in Claude Code's plugin system. Skills in the `skills/` directory are auto-discovered.
+Skills in `skills/` are symlinked by `install.sh` into both agents' global skills directories, so they trigger in any repo. (`install-plugin.sh` remains for the older plugin-based route in Claude Code; the symlinks are the supported path.)
 
-### `/claudery:create-repo`
+### `writing-style`
+
+Kill AI slop in chat responses, commit messages, PR descriptions and status updates: open with the point, no announcements or filler, positive form, concrete language, draft as bullets then convert each to one simple sentence. Includes a banned-phrase taxonomy and before/after rewrite examples. Softened fork of [stop-slop](https://github.com/hardikpandya/stop-slop) with Strunk composition rules.
+
+### `writing-docs`
+
+Write documentation with the Diataxis framework: classify every doc into one quadrant (tutorial, how-to, reference, explanation), keep the boundaries, match voice to quadrant, plain language throughout. Includes doc templates and an anti-patterns review checklist. Condensed from [developer-docs-framework](https://github.com/anivar/developer-docs-framework).
+
+### `create-repo`
 
 Create a new private GitHub repository from the `darrenbuse/claude-template` template.
 
@@ -51,13 +60,13 @@ Claude will ask for:
 
 Creates a private repo with customized README, git hooks (husky), and conventional commits.
 
-### `/claudery:generate-install-app`
+### `generate-install-app`
 
 Generate an install script that symlinks a repo's main executable to `~/.local/bin/`.
 
 Examines the repo to identify the entry point, handles multiple languages (Shell, Node.js, Python), and creates an idempotent `install.sh` (or `install-bin.sh` if `install.sh` already exists).
 
-### `/claudery:generate-plugin-install`
+### `generate-plugin-install`
 
 Generate an install script for a Claude Code plugin repo.
 

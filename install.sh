@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # Claudery Install Script
-# Creates symlink from ~/.claude/CLAUDE.md to this repo's CLAUDE.md
-# Configures attribution settings in settings.json
+# Creates symlinks from ~/.claude/CLAUDE.md and ~/.copilot/AGENTS.md to this
+# repo's CLAUDE.md, links every skill in skills/ into both agents' global
+# skills directories, and configures attribution settings in settings.json
 
 set -e
 
@@ -95,12 +96,28 @@ else
     echo "No settings.json in repo, skipping settings configuration"
 fi
 
-# Install plugin
+# Link the same instructions file for Copilot CLI
 echo ""
-"$SCRIPT_DIR/install-plugin.sh"
+if [ -d "$HOME/.copilot" ]; then
+    ln -sfn "$SOURCE_FILE" "$HOME/.copilot/AGENTS.md"
+    echo "Linked ~/.copilot/AGENTS.md -> CLAUDE.md"
+else
+    echo "~/.copilot not found, skipping Copilot CLI instructions link"
+fi
+
+# Link skills into both agents' global skills directories
+for agent_dir in "$HOME/.claude/skills" "$HOME/.copilot/skills"; do
+    [ -d "$(dirname "$agent_dir")" ] || continue
+    mkdir -p "$agent_dir"
+    for skill_dir in "$SCRIPT_DIR"/skills/*/; do
+        skill_name="$(basename "$skill_dir")"
+        ln -sfn "${skill_dir%/}" "$agent_dir/$skill_name"
+    done
+    echo "Linked skills into $agent_dir"
+done
 
 echo ""
-echo "Done! Your personal AI preferences and plugins are now active for Claude Code."
+echo "Done! Your personal AI preferences and skills are now active for Claude Code and Copilot CLI."
 echo ""
 echo "Available skills:"
 for skill_file in "$SCRIPT_DIR"/skills/*/SKILL.md; do

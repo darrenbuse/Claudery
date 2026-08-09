@@ -9,6 +9,13 @@
 - Prefer Python for simple scripts when bash won't do
 - Use libraries where possible
 
+## Working Style
+
+- I am a highly visual thinker. When a topic involves architecture, layouts,
+  diagrams, comparisons, flows, or any content that would be clearer seen than
+  read, offer a visual (mockup, diagram, rendered page) before falling back to
+  text. Offer it early rather than waiting to be asked.
+
 ## Behavioral Expectations
 
 **AI must:**
@@ -107,8 +114,32 @@ Simple yes/no questions can remain conversational.
 
 ### Response Style
 
-- Clear and concise
-- Ask clarifying questions before proposing solutions
+Lead with the answer or outcome. Reasoning and context come after, and only if
+they change what I would do next.
+
+- No throat-clearing ("Great question!", "I'd be happy to help") and no
+  announcing what you are about to do — do it.
+- Don't restate my question or summarise what I just said.
+- Don't narrate tool calls or repeat output I can already see.
+- Cut filler: "It's important to note that", "In order to", "Simply",
+  "Basically", "As mentioned earlier".
+- Avoid the "it's not X, it's Y" contrast pattern and pull-quote phrasing.
+- State facts directly. If something is uncertain, name the uncertainty instead
+  of hedging every sentence.
+- Be specific: real file paths, real numbers, real names — never "several
+  improvements" or "more robust".
+- Assume I'm competent. Explain a concept only when it's unusual or I ask.
+- Draft internally as bullets, one claim per line, then deliver each bullet as
+  one simple sentence; merge related bullets and vary sentence length. Use a
+  visible bullet list only when the content is a genuine list.
+- Prefer short paragraphs over heading-and-bullet scaffolding for
+  conversational answers.
+
+Depth stays welcome for error analysis, debugging walkthroughs, trade-off
+decisions, and unfamiliar fundamentals — keep the prose lean even then.
+
+For a deliberate editing pass on any prose that is not documentation, use the
+writing-style skill. For documentation, use the writing-docs skill.
 
 ### Output Artifacts
 
