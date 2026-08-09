@@ -76,6 +76,10 @@ Creates `install-plugin.sh` that registers the repo as a local marketplace and i
 
 Operate Jira from the terminal with the Atlassian CLI (`acli`): authentication, work-item create/search/edit/transition/comment, parent linking, ADF descriptions, bulk operations and destructive-command guardrails, backed by a generated command reference. Both this skill and `writing-tickets` read a per-repo `.atlassian.yaml` for the site URL, project key and organisation name, and ask for them when the file is absent.
 
+### `acli-confluence`
+
+Operate Confluence from the terminal with the Atlassian CLI (`acli`): authentication, viewing pages, listing and managing spaces, creating blog posts, and guardrails for the commands that publish or overwrite, backed by a generated command reference. Reads the same per-repo `.atlassian.yaml` as `acli-jira` for the Confluence site URL and space keys, and asks for them when the file is absent. Derived from the CLI's `--help` surface and honest about what has not yet been exercised against a live site.
+
 ### `writing-tickets`
 
 Write and challenge Jira epics and stories: business-first context, tiered outcome discipline, testable acceptance criteria, and templates with worked before/after examples. Reads the same per-repo `.atlassian.yaml` as `acli-jira` for the organisation name and project key, and asks for them when the file is absent.
