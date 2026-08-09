@@ -49,6 +49,12 @@ Atlassian. Schema and scaffold: [ATLASSIAN-YAML.md](ATLASSIAN-YAML.md).
 **Malformed or incomplete.** Name the key that is missing or would not parse, then continue
 as though the file were absent. Do not repair it silently.
 
+**Personal notes.** If `~/.atlassian-notes/` exists, read its `NOTES.md` before asking the
+user for page links, conventions or context — it holds their personal notes for the
+organisations they work with. It is optional and machine-local: when it is absent, skip
+this step silently. Treat its content as context for you, not text to paste into shared
+documents unless the user asks.
+
 ## Check authentication first — and use the right command
 
 ```bash

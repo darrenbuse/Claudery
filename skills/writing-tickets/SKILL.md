@@ -65,6 +65,12 @@ as though the file were absent. Do not repair it silently.
 Where these templates say "the organisation", use the `organisation` value from
 `.atlassian.yaml` when the repository has one.
 
+**Personal notes.** If `~/.atlassian-notes/` exists, read its `NOTES.md` before asking the
+user for page links, conventions or context — it holds their personal notes for the
+organisations they work with. It is optional and machine-local: when it is absent, skip
+this step silently. Treat its content as context for you, not text to paste into shared
+documents unless the user asks.
+
 ## Structure
 
 Two canonical schemas. Use these section names exactly.
