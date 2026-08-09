@@ -72,6 +72,14 @@ Generate an install script for a Claude Code plugin repo.
 
 Creates `install-plugin.sh` that registers the repo as a local marketplace and installs the plugin into Claude Code's plugin system. Requires `.claude-plugin/plugin.json` and `jq`.
 
+### `acli-jira`
+
+Operate Jira from the terminal with the Atlassian CLI (`acli`): authentication, work-item create/search/edit/transition/comment, parent linking, ADF descriptions, bulk operations and destructive-command guardrails, backed by a generated command reference. Both this skill and `writing-tickets` read a per-repo `.atlassian.yaml` for the site URL, project key and organisation name, and ask for them when the file is absent.
+
+### `writing-tickets`
+
+Write and challenge Jira epics and stories: business-first context, tiered outcome discipline, testable acceptance criteria, and templates with worked before/after examples. Reads the same per-repo `.atlassian.yaml` as `acli-jira` for the organisation name and project key, and asks for them when the file is absent.
+
 ## License
 
 MIT
