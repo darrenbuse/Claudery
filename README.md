@@ -48,6 +48,10 @@ Kill AI slop in chat responses, commit messages, PR descriptions and status upda
 
 Write documentation with the Diataxis framework: classify every doc into one quadrant (tutorial, how-to, reference, explanation), keep the boundaries, match voice to quadrant, plain language throughout. Includes doc templates and an anti-patterns review checklist. Condensed from [developer-docs-framework](https://github.com/anivar/developer-docs-framework).
 
+### `session-summary`
+
+Summarise a working session at a high level: achieved outcomes grouped by workstream with their artifacts (PRs, commits, paths), then open items split into blocked-on-you versus future backlog. For wrap-ups, handoffs and progress reports.
+
 ### `create-repo`
 
 Create a new private GitHub repository from the `darrenbuse/claude-template` template.
